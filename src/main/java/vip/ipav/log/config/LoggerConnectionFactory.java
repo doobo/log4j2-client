@@ -1,31 +1,19 @@
-/*
 package vip.ipav.log.config;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-*/
-/**
- * 日志配置所使用的数据库连接工厂类
- * <p>Created by followtry on 2017/4/20.
- *//*
-
-@Component
 public class LoggerConnectionFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggerConnectionFactory.class);
 
-    private static final LoggerConnectionFactory loggerConnectionFactory = new LoggerConnectionFactory();
-
-    @Autowired
     private DataSource dataSource;
 
     //通过内部单例接口实例化当前工厂类并提供Connection连接
@@ -33,13 +21,16 @@ public class LoggerConnectionFactory {
         LoggerConnectionFactory INSTANCE = new LoggerConnectionFactory();
     }
 
-    @PostConstruct
+    //饿汉式单例
+    //private static final LoggerConnectionFactory loggerConnectionFactory = new LoggerConnectionFactory();
+
+    @PostConstruct//在servlet里面，在初始化servlet前执行，只执行一次
     void init(){
         Properties prop = new Properties() {
             {
-                put("username","abc");
-                put("password","abc");
-                put("url","jdbc:mysql://172.20.19.200:3306/xx_test?useUnicode=true&characterEncoding=UTF-8");
+                put("username","root");
+                put("password","root");
+                put("url","jdbc:mysql://ipav.vip:3306/test?useUnicode=true&characterEncoding=UTF-8");
                 put("driverClassName","com.mysql.jdbc.Driver");
             }
         };
@@ -51,10 +42,11 @@ public class LoggerConnectionFactory {
         }
     }
 
-    private LoggerConnectionFactory() {}
+    private LoggerConnectionFactory() {
+        init();
+    }
 
     public static Connection getDatabaseConnection() throws SQLException {
         return Singleton.INSTANCE.dataSource.getConnection();
     }
 }
-*/

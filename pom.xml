@@ -80,6 +80,13 @@
             <version>${mysql.driver.version}</version>
         </dependency>
 
+        <!--druid阿里连接池-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.18</version>
+        </dependency>
+
         <!--邮箱-->
         <dependency>
             <groupId>javax.mail</groupId>
