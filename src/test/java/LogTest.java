@@ -21,4 +21,10 @@ public class LogTest {
         sqlLogger.info("Hello, This is Sql Error Log 4!");
         sqlLogger.error("Error Log 4!");
     }*/
+
+    Logger logger2 = LogManager.getLogger(LogTest.class);
+    @Test
+    public void defaultLog(){
+        logger2.debug("Hello Debug");
+    }
 }
