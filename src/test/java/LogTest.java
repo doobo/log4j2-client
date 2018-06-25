@@ -14,7 +14,7 @@ public class LogTest {
         logger.debug("Hello {}","Debug Log");
     }
 
-    /*数据库日志记录*/
+    //数据库日志记录
     Logger sqlLogger = LogManager.getLogger("AsyncDBLogger");
     @Test
     public void testSqlLog(){

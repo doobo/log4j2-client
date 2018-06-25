@@ -4,7 +4,7 @@
 log4j2-test.yml,log4j2-test.json,log4j2-test.jsn,log4j2-test.xml,log4j2.properties,
 log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
 <!--monitorInterval:指定间隔监控配置文件是否更改，更改后自动重新配置，不需要重启服务。-->
-<configuration name="logs" status="info" monitorInterval="5" strict="false">
+<configuration name="logs" status="info" monitorInterval="300" strict="false">
 
     <properties>
         <property name="catalina.home">log4j2</property>
@@ -21,39 +21,63 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         <RollingFile name="infoLog"
                      fileName="${catalina.home}/info.log"
                      append="true"
-                     filePattern="${catalina.home}/info.log.%d{yyyy-MM-dd}">
+                     filePattern="${catalina.home}/info_%d{yyyy-MM-dd}.log">
             <PatternLayout
                     pattern="%d{yyyy.MM.dd 'at' HH:mm:ss.SSS z} %-5level %class{36} %L %M - %msg%xEx%n"/>
-            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!--过滤器，只展示info，不展示error-->
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="24"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
             </Policies>
         </RollingFile>
 
         <!--将error级别的信息追加到error.log日志文件-->
+        <!--filePath：${catalina.home}/app-%d{yyyy-MM}.log 按月生成日志-->
+        <!--filePath：${catalina.home}/app-%d{yyyy-MM-dd-HH-mm}.log 按分钟生成日志-->
         <RollingFile name="errorLog"
                      fileName="${catalina.home}/error.log"
                      append="true"
-                     filePattern="${catalina.home}/error.log.%d{yyyy-MM-dd}">
+                     filePattern="${catalina.home}/error_%d{yyyy-MM-dd-HH-mm}_%i.log">
             <PatternLayout
                     pattern="%d{yyyy.MM.dd 'at' HH:mm:ss.SSS z} %-5level %class{36} %L %M - %msg%xEx%n"/>
             <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="24"/>
+                <!--多少时间生成一个日志文件，1天,modulate="true"：以0点为边界-->
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+
+                <!--设置单个日志文件的大小上限,使用它一般会在文件中filePattern采用%i模式-->
+                <SizeBasedTriggeringPolicy size="10 MB" />
             </Policies>
+            <!--DefaultRolloverStrategy:
+               设置符合同个filePath的日志文件的最大数量
+               新产生的日志文件会覆盖旧的日志文件
+           -->
+            <!--删除以.log结尾，超过5分钟的日志文件-->
+            <DefaultRolloverStrategy max="3">
+                <Delete basePath="${catalina.home}" maxDepth="1">
+                    <IfFileName glob="*.log"></IfFileName>
+                    <!--S/m/d 秒/分/天-->
+                    <IfLastModified age="5m" />
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
 
         <!--将特定的信息追加到selfLog.log日志文件-->
         <RollingFile name="selfLog"
                      fileName="${catalina.home}/self.log"
                      append="true"
-                     filePattern="${catalina.home}/self.log.%d{yyyy-MM-dd}">
+                     filePattern="${catalina.home}/self_%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="%d %-5p %t - %c %l - %m%n"/>
             <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="24"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
             </Policies>
         </RollingFile>
+
+        <!--限制日志文件大小-->
 
         <!--配置日志写入mysql数据库 -->
         <JDBC name="databaseAppender" tableName="logger_info">
@@ -100,8 +124,8 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         <!--记录其它日志时，多会同时启用下面的日志-->
         <Root level="debug">
             <AppenderRef ref="stdout"/>
-            <!--<AppenderRef ref="errorLog"/>
-            <AppenderRef ref="infoLog"/>-->
+            <AppenderRef ref="errorLog"/>
+            <AppenderRef ref="infoLog"/>
         </Root>
     </loggers>
 
