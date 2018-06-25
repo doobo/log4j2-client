@@ -15,10 +15,10 @@ public class LogTest {
     }
 
     //数据库日志记录
-    Logger sqlLogger = LogManager.getLogger("AsyncDBLogger");
+    /*Logger sqlLogger = LogManager.getLogger("AsyncDBLogger");
     @Test
     public void testSqlLog(){
         sqlLogger.info("Hello, This is Sql Error Log 4!");
         sqlLogger.error("Error Log 4!");
-    }
+    }*/
 }

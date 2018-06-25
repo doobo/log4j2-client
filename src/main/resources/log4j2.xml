@@ -80,7 +80,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         <!--限制日志文件大小-->
 
         <!--配置日志写入mysql数据库 -->
-        <JDBC name="databaseAppender" tableName="logger_info">
+        <!--<JDBC name="databaseAppender" tableName="logger_info">
             <ConnectionFactory class="vip.ipav.log.config.LoggerConnectionFactory"
                                method="getDatabaseConnection"/>
             <Column name="thread_name" pattern="%t"/>
@@ -92,16 +92,16 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
             <Column name="logger_message" pattern="%m"/>
             <Column name="logger_throwable" pattern="%throwable{3}"/>
             <Column name="createTime" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}"/>
-        </JDBC>
+        </JDBC>-->
         <!--
            tableName是数据库中的表名
            <Column>的name属性是指定数据库表中的字段名，pattern是匹配日志的内容格式，会将对应的内容写入到指定的字段下。
            <ConnectionFactory> 需要自定义数据库连接工厂类，并提供获取DataSource或者Connection的静态方法。
         -->
         <!--异步写入数据库-->
-        <Async name="AsyncDatabaseAppender">
+       <!-- <Async name="AsyncDatabaseAppender">
             <appender-ref ref="databaseAppender"/>
-        </Async>
+        </Async>-->
     </appenders>
 
 
@@ -116,10 +116,10 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         </Logger>
 
         <!--异步数据库日志记录,不执行下面的全局设置Root-->
-        <logger name="AsyncDBLogger" level="error" additivity="false">
+        <!--<logger name="AsyncDBLogger" level="error" additivity="false">
             <AppenderRef ref="databaseAppender"/>
             <AppenderRef ref="stdout"/>
-        </logger>
+        </logger>-->
 
         <!--记录其它日志时，多会同时启用下面的日志-->
         <Root level="debug">

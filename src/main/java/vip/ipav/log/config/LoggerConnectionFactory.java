@@ -1,3 +1,4 @@
+/*
 package vip.ipav.log.config;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
@@ -50,3 +51,4 @@ public class LoggerConnectionFactory {
         return Singleton.INSTANCE.dataSource.getConnection();
     }
 }
+*/
