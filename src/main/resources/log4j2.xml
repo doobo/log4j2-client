@@ -21,7 +21,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         <RollingFile name="infoLog"
                      fileName="${catalina.home}/info.log"
                      append="true"
-                     filePattern="${catalina.home}/info_%d{yyyy-MM-dd}.log">
+                     filePattern="${catalina.home}/info_%d{yyyy-MM-dd}_%i.log.zip">
             <PatternLayout
                     pattern="%d{yyyy.MM.dd 'at' HH:mm:ss.SSS z} %-5level %class{36} %L %M - %msg%xEx%n"/>
             <!--过滤器，只展示info，不展示error-->
@@ -31,7 +31,17 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
             </Filters>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <!--设置单个日志文件的大小上限,使用它一般会在文件中filePattern采用%i模式-->
+                <SizeBasedTriggeringPolicy size="10 MB" />
             </Policies>
+            <!--删除以.log结尾，超过5分钟的日志文件-->
+            <DefaultRolloverStrategy max="3">
+                <Delete basePath="${catalina.home}" maxDepth="1">
+                    <IfFileName glob="*.zip"></IfFileName>
+                    <!--S/m/d 秒/分/天-->
+                    <IfLastModified age="3d" />
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
 
         <!--将error级别的信息追加到error.log日志文件-->
@@ -40,7 +50,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         <RollingFile name="errorLog"
                      fileName="${catalina.home}/error.log"
                      append="true"
-                     filePattern="${catalina.home}/error_%d{yyyy-MM-dd-HH-mm}_%i.log">
+                     filePattern="${catalina.home}/error_%d{yyyy-MM-dd-HH}_%i.log">
             <PatternLayout
                     pattern="%d{yyyy.MM.dd 'at' HH:mm:ss.SSS z} %-5level %class{36} %L %M - %msg%xEx%n"/>
             <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
@@ -60,7 +70,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
                 <Delete basePath="${catalina.home}" maxDepth="1">
                     <IfFileName glob="*.log"></IfFileName>
                     <!--S/m/d 秒/分/天-->
-                    <IfLastModified age="5m" />
+                    <IfLastModified age="3d" />
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
@@ -69,12 +79,20 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         <RollingFile name="selfLog"
                      fileName="${catalina.home}/self.log"
                      append="true"
-                     filePattern="${catalina.home}/self_%d{yyyy-MM-dd}.log">
+                     filePattern="${catalina.home}/self_%d{yyyy-MM-dd}.log.zip">
             <PatternLayout pattern="%d %-5p %t - %c %l - %m%n"/>
             <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
             </Policies>
+            <!--删除以.log结尾，超过5分钟的日志文件-->
+            <DefaultRolloverStrategy max="3">
+                <Delete basePath="${catalina.home}" maxDepth="1">
+                    <IfFileName glob="self_*.zip"></IfFileName>
+                    <!--S/m/d 秒/分/天-->
+                    <IfLastModified age="1d" />
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
 
         <!--限制日志文件大小-->
