@@ -27,4 +27,12 @@ public class LogTest {
     public void defaultLog(){
         logger2.debug("Hello Debug");
     }
+
+    /*异步日志记录，不包含类名和方法名*/
+    Logger asyncLogger = LogManager.getLogger("AsyncSelfLogger");
+    @Test
+    public void testAsyncLog() throws InterruptedException {
+        asyncLogger.info("Hello {}","AsyncLogger");
+
+    }
 }
