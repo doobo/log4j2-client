@@ -1,4 +1,4 @@
-package vip.ipav.log.config;
+/*package vip.ipav.log.config;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import org.slf4j.Logger;
@@ -49,4 +49,4 @@ public class LoggerConnectionFactory {
     public static Connection getDatabaseConnection() throws SQLException {
         return Singleton.INSTANCE.dataSource.getConnection();
     }
-}
+}*/
