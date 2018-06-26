@@ -1,3 +1,4 @@
 target/
 *.iml
 log4j2/
+logs/
