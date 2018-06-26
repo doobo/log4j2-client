@@ -29,7 +29,7 @@ public class LoggerConnectionFactory {
         Properties prop = new Properties() {
             {
                 put("username","root");
-                put("password","HXB@ipav.112");
+                put("password","root");
                 put("url","jdbc:mysql://ipav.vip:3306/test?useUnicode=true&characterEncoding=UTF-8");
                 put("driverClassName","com.mysql.jdbc.Driver");
             }
