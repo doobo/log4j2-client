@@ -30,7 +30,7 @@ public class LoggerConnectionFactory {
             {
                 put("username","root");
                 put("password","root");
-                put("url","jdbc:mysql://ipav.vip:3306/test?useUnicode=true&characterEncoding=UTF-8");
+                put("url","jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8");
                 put("driverClassName","com.mysql.jdbc.Driver");
             }
         };

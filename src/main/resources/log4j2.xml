@@ -7,37 +7,38 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
 <configuration name="logs" status="info" monitorInterval="300" strict="false">
 
     <properties>
-        <property name="catalina.home">logs</property>
+        <property name="catalina.home">${sys:user.home}/logs</property>
     </properties>
 
     <appenders>
         <!--打印日志到控制台-->
         <Console name="stdout" target="SYSTEM_OUT">
             <!--<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>-->
-            <PatternLayout pattern="%d %c{1.}-%p %class{36}-%M() [%t-%L] %m%n"/>
+            <PatternLayout pattern="%d %c{1.}-%p %class{36}-%M() [%t:%L] %m%n"/>
         </Console>
 
         <!--将info级别的信息追加到info.log日志文件-->
         <RollingFile name="infoLog"
                      fileName="${catalina.home}/info.log"
                      append="true"
-                     filePattern="${catalina.home}/info_%d{yyyy-MM-dd-HH}.log.zip">
+                     filePattern="${catalina.home}/info_%d{yyyy-MM-dd}.log.zip">
             <PatternLayout
-                    pattern="%d %c{1.}-%p %class{36}-%M() [%t-%L] %m%n"/>
+                    pattern="%d %c{1.}-%p %class{36}-%M() [%t:%L] %m%n"/>
             <!--过滤器，只展示info，不展示error-->
-            <Filters>
+            <!--<Filters>
                 <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
-            </Filters>
+            </Filters>-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
             </Policies>
             <!--删除以info_*.log.zip结尾，超过2小时的日志文件-->
-            <DefaultRolloverStrategy max="3">
+            <DefaultRolloverStrategy max="7">
                 <Delete basePath="${catalina.home}" maxDepth="1">
                     <IfFileName glob="info_*.log.zip"></IfFileName>
                     <!--S/m/d 秒/分/天-->
-                    <IfLastModified age="2H" />
+                    <IfLastModified age="7d" />
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
@@ -50,7 +51,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
                      append="true"
                      filePattern="${catalina.home}/error_%d{yyyy-MM-dd}_%i.log.zip">
             <PatternLayout
-                    pattern="%d %c{1.}-%p %class{36}-%M() [%t-%L] %m%n"/>
+                    pattern="%d %c{1.}-%p %class{36}-%M() [%t:%L] %m%n"/>
             <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
             <Policies>
                 <!--多少时间生成一个日志文件，1天,modulate="true"：以0点为边界-->
@@ -73,28 +74,28 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         </RollingFile>
 
         <!--将特定的信息追加到selfLog.log日志文件-->
-        <RollingFile name="selfLog"
-                     fileName="${catalina.home}/self.log"
+        <RollingFile name="customLog"
+                     fileName="${catalina.home}/custom.log"
                      append="true"
-                     filePattern="${catalina.home}/self_%d{yyyy-MM-dd-HH}.log.zip">
-            <PatternLayout pattern="%d %c{1.}-%p %class{36}-%M() [%t-%L] %m%n"/>
+                     filePattern="${catalina.home}/custom_%d{yyyy-MM-dd-HH}-00.log.zip">
+            <PatternLayout pattern="%d %c{1.}-%p %class{36}-%M() [%t:%L] %m%n"/>
             <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
             </Policies>
-            <!--删除以self_*.zip结尾，超过50分钟的日志文件-->
+            <!--删除以self_*.zip结尾，超过2小时的日志文件-->
             <DefaultRolloverStrategy max="7">
                 <Delete basePath="${catalina.home}" maxDepth="1">
-                    <IfFileName glob="self_*.log.zip"></IfFileName>
+                    <IfFileName glob="custom_*.log.zip"></IfFileName>
                     <!--S/m/d 秒/分/天-->
-                    <IfLastModified age="2H" />
+                    <IfLastModified age="2h" />
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
 
         <!--异步写入日志-->
         <Async name="AsyncLog">
-            <AppenderRef ref="selfLog"/>
+            <AppenderRef ref="customLog"/>
         </Async>
 
         <!--配置日志写入mysql数据库 -->
@@ -128,14 +129,17 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
       LOGGER_MAIL的日志都只会发送邮件，不写到文件中
     -->
     <loggers>
-        <Logger name="selfLogger" level="info" additivity="true">
-            <AppenderRef ref="selfLog"/>
+        <Logger name="customLogger" level="info" additivity="true">
+            <AppenderRef ref="customLog"/>
         </Logger>
 
-        <!--同步数据库日志记录,不执行下面的全局设置Root-->
-        <logger name="SyncDBLogger" level="error" additivity="false">
-            <AppenderRef ref="databaseAppender"/>
+        <logger name="consoleLogger" level="debug" additivity="false">
             <AppenderRef ref="stdout"/>
+        </logger>
+
+        <!--同步数据库日志记录,不执行下面的全局设置Root-->
+        <logger name="SyncDBLogger" level="error" additivity="true">
+            <AppenderRef ref="databaseAppender"/>
         </logger>
 
         <!--异步数据库记录，没有类名和方法名-->
@@ -146,12 +150,12 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         <!--异步日志记录，没有类名和方法名,includeLocation="true":让Root日志记录显示类名和方法，效率降低30倍左右
             additivity="false",不执行root里面的日志记录
         -->
-        <AsyncLogger name="AsyncSelfLogger" level="info" additivity="true" includeLocation="true">
+        <AsyncLogger name="AsyncSelfLogger" level="info" additivity="true">
             <AppenderRef ref="AsyncLog"/>
         </AsyncLogger>
 
         <!--记录其它日志时，多会同时启用下面的日志-->
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="stdout"/>
             <AppenderRef ref="errorLog"/>
             <AppenderRef ref="infoLog"/>
