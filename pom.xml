@@ -86,6 +86,13 @@
             <version>1.0.18</version>
         </dependency>
 
+        <!-- 使用异步写日志功能 必须引入此包-->
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+
         <!--邮箱-->
         <dependency>
             <groupId>javax.mail</groupId>

@@ -18,7 +18,14 @@ public class LogTest {
     Logger sqlLogger = LogManager.getLogger("AsyncDBLogger");
     @Test
     public void testSqlLog(){
-        sqlLogger.info("Hello, This is Sql Error Log 4!");
-        sqlLogger.error("Error Log 4!");
+        sqlLogger.info("Hello, This is Sql Error Log 1!");
+        sqlLogger.error("Error Log 1!");
+    }
+
+    Logger asyncLogger = LogManager.getLogger("AsyncSelfLogger");
+    @Test
+    public void testAsyncLog() throws InterruptedException {
+        asyncLogger.info("Hello {}","AsyncLogger");
+
     }
 }
