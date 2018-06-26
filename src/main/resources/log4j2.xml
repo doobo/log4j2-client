@@ -88,7 +88,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
                 <Delete basePath="${catalina.home}" maxDepth="1">
                     <IfFileName glob="custom_*.log.zip"></IfFileName>
                     <!--S/m/d 秒/分/天-->
-                    <IfLastModified age="1h" />
+                    <IfLastModified age="2h" />
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
@@ -105,8 +105,9 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
       LOGGER_MAIL的日志都只会发送邮件，不写到文件中
     -->
     <loggers>
-        <Logger name="customLogger" level="info" additivity="true">
+        <Logger name="customLogger" level="info" additivity="false">
             <AppenderRef ref="customLog"/>
+            <AppenderRef ref="stdout"/>
         </Logger>
 
         <logger name="consoleLogger" level="debug" additivity="false">
@@ -117,7 +118,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         <!--异步日志记录，没有类名和方法名,includeLocation="true":让Root日志记录显示类名和方法，效率降低30倍左右
             additivity="false",不执行root里面的日志记录
         -->
-        <AsyncLogger name="AsyncSelfLogger" level="info">
+        <AsyncLogger name="AsyncCustomLogger" level="info" additivity="false">
             <AppenderRef ref="AsyncLog"/>
         </AsyncLogger>
 

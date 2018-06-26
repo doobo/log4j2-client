@@ -17,7 +17,7 @@ public class LoggerTools {
      * @return
      */
     public static Logger getAsyncSelfLogger(){
-        return LogManager.getLogger("AsyncSelfLogger");
+        return LogManager.getLogger("AsyncCustomLogger");
     }
 
     /**
