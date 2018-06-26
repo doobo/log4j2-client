@@ -1,10 +1,11 @@
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+import vip.ipav.log.util.LoggerTools;
 
 public class LogTest {
 
-    Logger logger = LogManager.getLogger("selfLogger");
+    Logger logger = LogManager.getLogger("customLogger");
 
     /*普通文件日志记录*/
     @Test
@@ -25,14 +26,20 @@ public class LogTest {
     Logger logger2 = LogManager.getLogger(LogTest.class);
     @Test
     public void defaultLog(){
-        logger2.debug("Hello Debug");
+        LoggerTools.getConsoleLogger().debug("Hello Debug");
     }
 
     /*异步日志记录，不包含类名和方法名*/
-    Logger asyncLogger = LogManager.getLogger("AsyncSelfLogger");
+    Logger asyncLogger = LogManager.getLogger("AsyncCustomLogger");
     @Test
     public void testAsyncLog() throws InterruptedException {
         asyncLogger.info("Hello {}","AsyncLogger");
 
+    }
+
+    @Test
+    public void testTools(){
+        LoggerTools.getAsyncSelfLogger().error("Hello Tools Error!");
+        LoggerTools.getCustomLogger().info("Hello Tools Info!");
     }
 }

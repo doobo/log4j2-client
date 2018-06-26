@@ -9,10 +9,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.version>4.12</junit.version>
-        <druid.version>1.0.18</druid.version>
-        <fastjson.version>1.2.9</fastjson.version>
         <log4j2.version>2.11.0</log4j2.version>
-        <mysql.driver.version>5.1.36</mysql.driver.version>
         <slf4j.version>1.7.24</slf4j.version>
     </properties>
     <groupId>vip.ipav</groupId>
@@ -26,7 +23,7 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--slf4j 接口-->
+        <!--slf4j 接口,兼容log4j低版本-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -38,15 +35,11 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j2.version}</version>
         </dependency>
+
         <!--log4j2 实现及接口-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>${log4j2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
             <version>${log4j2.version}</version>
         </dependency>
         <!-- 使用异步写日志功能 必须引入此包-->
@@ -55,6 +48,24 @@
             <artifactId>disruptor</artifactId>
             <version>3.4.2</version>
         </dependency>
+
+        <!--使用Spring管理log4j2,通过Spring进行初始化，普通web也适用-->
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-web -->
+        <!--web.xml配置
+             <context-param>
+                <param-name>log4jContextName</param-name>
+                <param-value>star</param-value>
+            </context-param>
+            <context-param>
+                <param-name>log4jConfiguration</param-name>
+                <param-value>classpath:profiles/log4j2.xml</param-value>
+            </context-param>
+        -->
+        <!--<dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-web</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>-->
 
         <!--json解析器-->
         <!--<dependency>
