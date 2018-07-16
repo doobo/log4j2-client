@@ -15,7 +15,7 @@
 <dependency>
     <groupId>com.github.doobo</groupId>
     <artifactId>log4j2-client</artifactId>
-    <version>v1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
