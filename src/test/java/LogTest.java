@@ -43,6 +43,7 @@ public class LogTest {
     public void testTools(){
         LoggerProvider.getInstance().setLevel(Level.INFO,LoggerProvider.LoggerNames.simpleLogger);
         LoggerProvider.getInstance().getSimpleLogger().info("Hello Info");
+        LoggerProvider.getInstance().getPrintlnLogger().trace("Hello Trace");
     }
 
     @Test

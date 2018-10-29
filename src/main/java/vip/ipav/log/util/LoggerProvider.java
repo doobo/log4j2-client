@@ -9,11 +9,15 @@ import java.util.HashMap;
 
 public class LoggerProvider {
 
+    /**
+     * 自定义日志种类
+     */
     public enum LoggerNames {
         customLogger,
         AsyncCustomLogger,
         consoleLogger,
-        simpleLogger
+        simpleLogger,
+        printlnLogger
     }
 
     private static class LazyHolder {
@@ -70,6 +74,15 @@ public class LoggerProvider {
         }
         Logger logger = LogManager.getLogger("simpleLogger");
         map.put("simpleLogger",logger);
+        return logger;
+    }
+
+    public Logger getPrintlnLogger(){
+        if(map.containsKey("printlnLogger")){
+            return map.get("printlnLogger");
+        }
+        Logger logger = LogManager.getLogger("printlnLogger");
+        map.put("printlnLogger",logger);
         return logger;
     }
 
