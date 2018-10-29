@@ -1,6 +1,8 @@
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+import vip.ipav.log.util.LoggerProvider;
 import vip.ipav.log.util.LoggerTools;
 
 public class LogTest {
@@ -39,7 +41,12 @@ public class LogTest {
 
     @Test
     public void testTools(){
-        LoggerTools.getAsyncSelfLogger().error("Hello Tools Error!");
-        LoggerTools.getCustomLogger().info("Hello Tools Info!");
+        LoggerProvider.getInstance().setLevel(Level.INFO,LoggerProvider.LoggerNames.simpleLogger);
+        LoggerProvider.getInstance().getSimpleLogger().info("Hello Info");
+    }
+
+    @Test
+    public void testLevel(){
+        System.out.println(Level.INFO.name());
     }
 }

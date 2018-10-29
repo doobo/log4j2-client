@@ -14,7 +14,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         <!--打印日志到控制台-->
         <Console name="stdout" target="SYSTEM_OUT">
             <!--<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>-->
-            <PatternLayout pattern="%d %c{1.}-%p %class{36}-%M() [%t:%L] %m%n"/>
+            <PatternLayout pattern="%d{HH:mm}_%p_%class{36}_%M_[%t:%L] %m%n"/>
         </Console>
 
         <!--将info级别的信息追加到info.log日志文件-->
@@ -33,7 +33,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
             </Policies>
-            <!--删除以info_*.log.zip结尾，超过2小时的日志文件-->
+            <!--删除以info_*.log.zip结尾，超过7天的日志文件-->
             <DefaultRolloverStrategy max="10">
                 <Delete basePath="${catalina.home}" maxDepth="1">
                     <IfFileName glob="info_*.log.zip"></IfFileName>
@@ -74,7 +74,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
             </DefaultRolloverStrategy>
         </RollingFile>
 
-        !--将特定的信息追加到selfLog.log日志文件-->
+        <!--将特定的信息追加到custom.log日志文件-->
         <RollingFile name="customLog"
                      fileName="${catalina.home}/custom.log"
                      append="true"
@@ -84,12 +84,12 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
             </Policies>
-            <!--删除以self_*.zip结尾，超过50分钟的日志文件-->
+            <!--删除以custom__*.log.zip结尾，超过2小时的日志文件-->
             <DefaultRolloverStrategy max="7">
                 <Delete basePath="${catalina.home}" maxDepth="1">
                     <IfFileName glob="custom_*.log.zip"></IfFileName>
                     <!--S/m/d 秒/分/天-->
-                    <IfLastModified age="2h" />
+                    <IfLastModified age="2d" />
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
@@ -99,8 +99,74 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
             <AppenderRef ref="customLog"/>
         </Async>
 
-        <!--限制日志文件大小-->
+        <!--自定义简单日志文件，分级别输出日志:debug-->
+        <RollingFile name="simple_debug"
+                     fileName="${catalina.home}/simple_debug.log"
+                     append="true"
+                     filePattern="${catalina.home}/simple_debug_%d{yyyy-MM-dd-HH}-00.log.zip">
+            <PatternLayout pattern="%d{HH:mm_ss}_%M %m%n"/>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+            <!--删除以self_*.zip结尾，超过2小时的日志文件-->
+            <DefaultRolloverStrategy max="7">
+                <Delete basePath="${catalina.home}" maxDepth="1">
+                    <IfFileName glob="simple_debug_*.log.zip"></IfFileName>
+                    <!--S/m/d 秒/分/天-->
+                    <IfLastModified age="1d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
 
+        <!--自定义简单日志文件，分级别输出日志:info-->
+        <RollingFile name="simple_info"
+                     fileName="${catalina.home}/simple_info.log"
+                     append="true"
+                     filePattern="${catalina.home}/simple_info_%d{yyyy-MM-dd-HH}-00.log.zip">
+            <PatternLayout pattern="%d{HH:mm_ss}_%M %m%n"/>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+            <!--删除以self_*.zip结尾，超过2小时的日志文件-->
+            <DefaultRolloverStrategy max="7">
+                <Delete basePath="${catalina.home}" maxDepth="1">
+                    <IfFileName glob="simple_info_*.log.zip"></IfFileName>
+                    <!--S/m/d 秒/分/天-->
+                    <IfLastModified age="1d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!--自定义简单日志文件，分级别输出日志:error-->
+        <RollingFile name="simple_error"
+                     fileName="${catalina.home}/simple_error.log"
+                     append="true"
+                     filePattern="${catalina.home}/simple_error_%d{yyyy-MM-dd-HH}-00.log.zip">
+            <PatternLayout pattern="%d{HH:mm_ss}_%M %m%n"/>
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+            <!--删除以self_*.zip结尾，超过2小时的日志文件-->
+            <DefaultRolloverStrategy max="7">
+                <Delete basePath="${catalina.home}" maxDepth="1">
+                    <IfFileName glob="simple_error_*.log.zip"></IfFileName>
+                    <!--S/m/d 秒/分/天-->
+                    <IfLastModified age="1d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!--限制日志文件大小-->
         <!--配置日志写入mysql数据库 -->
         <!--<JDBC name="databaseAppender" tableName="logger_info">
             <ConnectionFactory class="vip.ipav.log.config.LoggerConnectionFactory"
@@ -139,6 +205,13 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
         </Logger>
 
         <logger name="consoleLogger" level="debug" additivity="false">
+            <AppenderRef ref="stdout"/>
+        </logger>
+
+        <logger name="simpleLogger" level="debug" additivity="false">
+            <AppenderRef ref="simple_debug"/>
+            <AppenderRef ref="simple_info"/>
+            <AppenderRef ref="simple_error"/>
             <AppenderRef ref="stdout"/>
         </logger>
 
