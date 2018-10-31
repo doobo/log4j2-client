@@ -7,7 +7,7 @@ log4j2.yaml,log4j2.yml,log4j2.json,log4j2.jsn,log4j2.xml-->
 <configuration name="logs" status="info" monitorInterval="300" strict="false">
 
     <properties>
-        <property name="catalina.home">${sys:user.home}/logs</property>
+        <property name="catalina.home">${sys:log4j2.home}/logs</property>
     </properties>
 
     <appenders>

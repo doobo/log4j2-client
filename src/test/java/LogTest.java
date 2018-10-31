@@ -1,6 +1,8 @@
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.spi.LoggerContext;
+import org.junit.Before;
 import org.junit.Test;
 import vip.ipav.log.util.LoggerProvider;
 import vip.ipav.log.util.LoggerTools;
@@ -39,6 +41,14 @@ public class LogTest {
 
     }
 
+    //@Before
+    public void beforeRun(){
+        LoggerProvider.setLogParentPath("/Users/doobo/Downloads");
+        org.apache.logging.log4j.core.LoggerContext ctx =
+                (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
+        ctx.reconfigure();
+    }
+
     @Test
     public void testTools(){
         LoggerProvider.getInstance().setLevel(Level.INFO,LoggerProvider.LoggerNames.simpleLogger);
@@ -48,6 +58,7 @@ public class LogTest {
 
     @Test
     public void testLevel(){
+        System.out.println(System.getProperty("user.dir"));
         System.out.println(Level.INFO.name());
     }
 }

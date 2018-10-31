@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class LoggerProvider {
@@ -18,6 +19,12 @@ public class LoggerProvider {
         consoleLogger,
         simpleLogger,
         printlnLogger
+    }
+
+    static {
+        if(System.getProperty("log4j2.home") == null){
+            setLogParentPath(System.getProperty("user.home"));
+        }
     }
 
     private static class LazyHolder {
@@ -97,6 +104,21 @@ public class LoggerProvider {
         }
         Configurator.setLevel(loggerName.name(),level);
         return true;
+    }
+
+    /**
+     * 动态设置日志的根目录
+     * @return
+     */
+    public static boolean setLogParentPath(String path){
+        if(new File(path).isDirectory()){
+            System.setProperty("log4j2.home", path);
+            org.apache.logging.log4j.core.LoggerContext ctx =
+                    (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
+            ctx.reconfigure();
+            return true;
+        }
+        return false;
     }
 
 }
