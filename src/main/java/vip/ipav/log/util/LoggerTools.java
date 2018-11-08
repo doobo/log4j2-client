@@ -5,11 +5,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
+@Deprecated
 public class LoggerTools {
     /**
      * 获取同步自定义日志记录器
      * @return
      */
+    @Deprecated
     public static Logger getCustomLogger(){
         return LogManager.getLogger("customLogger");
     }
@@ -19,6 +21,7 @@ public class LoggerTools {
      * @param level
      * @return
      */
+    @Deprecated
     public static Logger getCustomLogger(Level level){
         if(level != null){
             Configurator.setLevel("customLogger", level);
@@ -30,6 +33,7 @@ public class LoggerTools {
      * 获取异步日志记录器
      * @return
      */
+    @Deprecated
     public static Logger getAsyncSelfLogger(){
         return LogManager.getLogger("AsyncCustomLogger");
     }
@@ -39,6 +43,7 @@ public class LoggerTools {
      * @param level
      * @return
      */
+    @Deprecated
     public static Logger getAsyncSelfLogger(Level level){
         if(level != null){
             Configurator.setLevel("AsyncCustomLogger", level);
@@ -50,6 +55,7 @@ public class LoggerTools {
      * 获取默认日志记录器
      * @return
      */
+    @Deprecated
     public static Logger getRootLogger(){
         return LogManager.getRootLogger();
     }
@@ -58,6 +64,7 @@ public class LoggerTools {
      * 获取控制台输出日志器
      * @return
      */
+    @Deprecated
     public static Logger getConsoleLogger() {
         return LogManager.getLogger("consoleLogger");
     }
@@ -67,6 +74,7 @@ public class LoggerTools {
      * @param level
      * @return
      */
+    @Deprecated
     public static Logger getConsoleLogger(Level level) {
         if(level != null){
             Configurator.setLevel("consoleLogger", level);
@@ -78,10 +86,12 @@ public class LoggerTools {
      * 获取自定义简单日志
      * @return
      */
+    @Deprecated
     public static Logger getSimpleLogger(){
         return LogManager.getLogger("simpleLogger");
     }
 
+    @Deprecated
     public static Logger getSimpleLogger(Level level){
         if(level != null){
             Configurator.setLevel("simpleLogger", level);
