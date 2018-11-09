@@ -61,4 +61,12 @@ public class LogTest {
         System.out.println(System.getProperty("user.dir"));
         System.out.println(Level.INFO.name());
     }
+
+    @Test
+    public void testPath(){
+        LoggerProvider.setLogParentPath("f:/bbc\\");
+        LoggerProvider.getInstance().getConsoleLogger().info(
+                LoggerProvider.getInstance().getCurLogParentPath()
+        );
+    }
 }

@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class LoggerProvider {
@@ -21,14 +22,13 @@ public class LoggerProvider {
         printlnLogger
     }
 
-    static {
-        if(System.getProperty("log4j2.home") == null){
-            setLogParentPath(System.getProperty("user.home"));
-        }
-    }
-
     private static class LazyHolder {
         private static final LoggerProvider INSTANCE = new LoggerProvider();
+        static {
+            if(System.getProperty("log4j2.home") == null){
+                setLogParentPath(System.getProperty("user.home"));
+            }
+        }
     }
 
     private HashMap<String,Logger> map = new HashMap<>();
@@ -111,6 +111,12 @@ public class LoggerProvider {
      * @return
      */
     public static boolean setLogParentPath(String path){
+        if(!new File(path).exists()){
+            boolean tag = new File(path).mkdirs();
+            if(!tag){
+                return tag;
+            }
+        }
         if(new File(path).isDirectory()){
             System.setProperty("log4j2.home", path);
             org.apache.logging.log4j.core.LoggerContext ctx =
@@ -121,4 +127,20 @@ public class LoggerProvider {
         return false;
     }
 
+    /**
+     * 获取当前环境的日志根目录
+     */
+    public String getCurLogParentPath(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(System.getProperties().getProperty("log4j2.home"));
+        if(!"null".equals(sb.toString())){
+            if(!sb.toString().endsWith(File.separator) && !sb.toString().endsWith("/") && !sb.toString().endsWith("\\")){
+                sb.append(File.separator);
+            }
+        }else{
+            sb.setLength(0);
+        }
+        sb.append("logs");
+        return sb.toString();
+    }
 }
